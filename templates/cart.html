@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savat — OziqMarket</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#f8faf9;color:#0f172a}
+.container{width:min(900px,92%);margin:0 auto;padding:30px 0}
+.nav{background:#fff;border-bottom:1px solid #e2e8f0;padding:14px 0;margin-bottom:24px}
+.nav-inner{width:min(900px,92%);margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:1.3rem;color:#16a34a;text-decoration:none}
+.logo span{color:#0f172a}
+h1{font-size:1.8rem;margin-bottom:20px}
+.item{background:#fff;border-radius:16px;padding:18px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:16px;border:1px solid #e2e8f0;flex-wrap:wrap}
+.item-info h3{font-size:1.05rem}
+.item-info p{color:#64748b;font-size:.9rem}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{width:32px;height:32px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-weight:700}
+.summary{background:#fff;border-radius:18px;padding:24px;border:1px solid #e2e8f0;margin-top:24px}
+.summary-row{display:flex;justify-content:space-between;margin-bottom:10px;font-size:.95rem}
+.summary-row.total{font-size:1.2rem;font-weight:800;color:#16a34a;border-top:1px solid #e2e8f0;padding-top:12px;margin-top:12px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-weight:600;margin-bottom:6px;font-size:.9rem}
+.form-group input,.form-group textarea{width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:12px;font:inherit;outline:none}
+.form-group input:focus,.form-group textarea:focus{border-color:#16a34a}
+.btn{background:#16a34a;color:#fff;border:none;padding:14px 28px;border-radius:12px;font-weight:700;cursor:pointer;font-size:1rem;width:100%;margin-top:8px}
+.btn:hover{background:#15803d}
+.empty{text-align:center;padding:60px;color:#64748b}
+.discount{background:#fef3c7;color:#92400e;padding:10px 14px;border-radius:10px;font-weight:600;margin-bottom:12px;font-size:.9rem}
+.msg{padding:12px;border-radius:10px;margin-bottom:12px}
+.msg.error{background:#fef2f2;color:#dc2626}
+.msg.success{background:#f0fdf4;color:#15803d}
+</style>
+</head>
+<body>
+<div class="nav"><div class="nav-inner"><a href="/" class="logo">Oziq<span>Market</span></a><a href="/menu/" style="color:#16a34a;font-weight:600">← Menyuga</a></div></div>
+<div class="container">
+  <h1>🛒 Savat</h1>
+  {% if messages %}{% for m in messages %}<div class="msg {% if 'error' in m.tags %}error{% else %}success{% endif %}">{{ m }}</div>{% endfor %}{% endif %}
+  {% if items %}
+  {% for item in items %}
+  <div class="item" data-id="{{ item.id }}">
+    <div class="item-info">
+      <h3>{{ item.product.name }}</h3>
+      <p>{{ item.product.final_price }} so‘m / {{ item.product.unit }}</p>
+    </div>
+    <div class="qty">
+      <button onclick="upd({{ item.id }},{{ item.quantity|add:'-1' }})">−</button>
+      <strong>{{ item.quantity }}</strong>
+      <button onclick="upd({{ item.id }},{{ item.quantity|add:'1' }})">+</button>
+    </div>
+    <div style="font-weight:700">{{ item.subtotal }} so‘m</div>
+    <button onclick="rm({{ item.id }})" style="border:none;background:#fef2f2;color:#dc2626;padding:8px 12px;border-radius:8px;cursor:pointer">O‘chirish</button>
+  </div>
+  {% endfor %}
+  <div class="summary">
+    {% if discount and discount.discount_percent > 0 %}
+    <div class="discount">🎉 Chegirma: {{ discount.discount_percent }}% ({{ discount.code }})</div>
+    {% endif %}
+    <div class="summary-row"><span>Jami</span><span>{{ subtotal }} so‘m</span></div>
+    {% if discount_amount %}<div class="summary-row"><span>Chegirma</span><span>−{{ discount_amount }} so‘m</span></div>{% endif %}
+    <div class="summary-row total"><span>To‘lov</span><span>{{ total }} so‘m</span></div>
+    <form method="post" action="{% url 'order_create' %}" style="margin-top:20px">
+      {% csrf_token %}
+      <div class="form-group"><label>Ism familiya *</label><input name="full_name" required value="{% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% endif %}"></div>
+      <div class="form-group"><label>Telefon *</label><input name="phone" required placeholder="+998 90 123 45 67"></div>
+      <div class="form-group"><label>Manzil *</label><textarea name="address" rows="2" required placeholder="Shahar, ko‘cha, uy"></textarea></div>
+      <div class="form-group"><label>Izoh</label><textarea name="note" rows="2" placeholder="Qo‘shimcha izoh (ixtiyoriy)"></textarea></div>
+      <button type="submit" class="btn">Buyurtma berish</button>
+    </form>
+  </div>
+  {% else %}
+  <div class="empty"><div style="font-size:3rem">🛒</div><p>Savat bo‘sh</p><a href="/menu/" style="display:inline-block;margin-top:16px;background:#16a34a;color:#fff;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:700">Menyuga o‘tish</a></div>
+  {% endif %}
+</div>
+<script>
+function getCookie(n){let c=document.cookie.match('(^|;) ?'+n+'=([^;]*)(;|$)');return c?c[2]:null}
+const CSRF=getCookie('csrftoken');
+async function upd(id,q){
+  const fd=new FormData();fd.append('quantity',q);
+  await fetch('/cart/update/'+id+'/',{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd});
+  location.reload();
+}
+async function rm(id){
+  await fetch('/cart/remove/'+id+'/',{method:'POST',headers:{'X-CSRFToken':CSRF}});
+  location.reload();
+}
+</script>
+
+<script>
+(function(){
+const translations={
+uz:{'Home':'Bosh sahifa','Menu':'Menyu','Sale':'Chegirmalar','Like':'Yoqtirganlar','About':'Biz haqimizda','Contact':'Aloqa','Login':'Kirish','Register':'Ro‘yxatdan o‘tish','Cart':'Savat','Menu':'Menyu','Sale':'Chegirmalar','AI':'AI yordamchi','Like':'Yoqtirganlar','Retsept':'Retseptlar','Game':'O‘yin','About':'Biz haqimizda','Contact':'Aloqa','Login':'Kirish','Register':'Ro‘yxatdan o‘tish','Cart':'Savat','Bosh sahifa':'Bosh sahifa','Savat':'Savat','Kirish':'Kirish','Ro‘yxat':'Ro‘yxatdan o‘tish','Mahsulotlar':'Mahsulotlar','Add to cart':'Savatga qo‘shish','+ Savat':'+ Savat','Search':'Qidirish','Search products':'Mahsulot qidirish','Product not found':'Mahsulot topilmadi'},
+ru:{'Home':'Главная','Menu':'Меню','Sale':'Скидки','Like':'Избранное','About':'О нас','Contact':'Контакты','Login':'Войти','Register':'Регистрация','Cart':'Корзина','Bosh sahifa':'Главная','Menyu':'Меню','Chegirmalar':'Скидки','AI yordamchi':'ИИ-помощник','Yoqtirganlar':'Избранное','Retseptlar':'Рецепты','O‘yin':'Игра','Biz haqimizda':'О нас','Aloqa':'Контакты','Kirish':'Войти','Ro‘yxatdan o‘tish':'Регистрация','Savat':'Корзина','Mahsulotlar':'Товары','Savatga qo‘shish':'В корзину','+ Savat':'+ В корзину','Qidirish':'Поиск','Mahsulot qidirish':'Поиск товаров','Mahsulot topilmadi':'Товары не найдены','Tez yetkazish':'Быстрая доставка','Yangi mahsulot':'Свежие продукты','Yuborish':'Отправить','Sharhlar':'Отзывы','Narx':'Цена'},
+en:{'Home':'Home','Menu':'Menu','Sale':'Sale','Like':'Favorites','About':'About','Contact':'Contact','Login':'Login','Register':'Register','Cart':'Cart','Bosh sahifa':'Home','Menyu':'Menu','Chegirmalar':'Sale','AI yordamchi':'AI Assistant','Yoqtirganlar':'Favorites','Retseptlar':'Recipes','O‘yin':'Game','Biz haqimizda':'About','Aloqa':'Contact','Kirish':'Login','Ro‘yxatdan o‘tish':'Register','Savat':'Cart','Mahsulotlar':'Products','Savatga qo‘shish':'Add to cart','+ Savat':'+ Add to cart','Qidirish':'Search','Mahsulot qidirish':'Search products','Mahsulot topilmadi':'No products found','Tez yetkazish':'Fast delivery','Yangi mahsulot':'Fresh products','Yuborish':'Submit','Sharhlar':'Reviews','Narx':'Price'}
+};
+const imageMap=[
+[/oreo|pechen.*oreo|oreo.*pechen/i,'photo-1587049352851-8d4e89133924'],
+[/pichen|pechen|печень|cookie|biscuit|печенье/i,'photo-1499636136210-6f4ee915583e'],
+[/vafli|waffle|вафл/i,'photo-1562376552-0d160a2f238d'],
+[/keks|muffin|cupcake|маффин/i,'photo-1607958996333-41aef7caefaa'],
+[/shokolad|chocolate|шоколад/i,'photo-1511381939415-e44015466834'],
+[/tort|cake|пирог/i,'photo-1578985545062-69928b1dafee'],
+[/konfet|candy|karamel|карамел|конфет/i,'photo-1581798459219-318e76aecc7b'],
+[/chips|chipsi|чипс/i,'photo-1566478989037-eec170784d0b'],
+[/muzqaymoq|ice.?cream|морожен/i,'photo-1563805042-7684c019e1cb'],
+[/olma|apple|яблок/i,'photo-1560806887-1e4cd0b6cbd6'],
+[/banan|banana|банан/i,'photo-1571771894821-ce9b6c11b08e'],
+[/apelsin|orange|mandarin|апельсин|мандарин/i,'photo-1547514701-42782101795e'],
+[/uzum|grape|виноград/i,'photo-1537640538966-79f369143f8f'],
+[/pomidor|tomato|томат/i,'photo-1546094096-0df4bcaaa337'],
+[/sabzi|carrot|морковь/i,'photo-1445282768818-728615cc910a'],
+[/non|bread|baget|хлеб/i,'photo-1509440159596-0249088772ff'],
+[/sut|milk|qatiq|yogurt|молок|йогурт/i,'photo-1550583724-b2692b85b150'],
+[/go.sht|meat|mol|tovuq|chicken|мясо|куриц/i,'photo-1607623814075-e51df1bdc82f'],
+[/pishloq|cheese|сыр/i,'photo-1486297678162-eb2a19b0a32d'],
+[/tuxum|egg|яйц/i,'photo-1506976785307-8732e854ad03'],
+[/suv|water|ichimlik|juice|вода|сок/i,'photo-1548839140-29a749e1cf4d'],
+[/sabzavot|vegetable|salat|ko.kat|овощ/i,'photo-1540420773420-3366772f4999'],
+[/meva|fruit|фрукт/i,'photo-1610832958506-aa56368176cf']
+];
+const photo=id=>'https://images.unsplash.com/'+id+'?auto=format&fit=crop&w=800&q=82';
+window.OZIQ_IMAGES={fallback:photo('photo-1542838132-92c53300491e')};
+document.querySelectorAll('img[data-product-image]').forEach(img=>{
+ const text=(img.dataset.productImage||'')+' '+(img.dataset.category||'');
+ const found=imageMap.find(x=>x[0].test(text));
+ img.src=photo(found?found[1]:'photo-1542838132-92c53300491e');
+ img.onerror=()=>{img.onerror=null;img.src=window.OZIQ_IMAGES.fallback};
+});
+let lang=localStorage.getItem('oziq-lang')||'uz';
+function applyLanguage(){
+ document.documentElement.lang=lang;
+ const dict=translations[lang]||translations.uz;
+ // Translate exact standalone text nodes, preserving Django-rendered product/user data.
+ const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+ const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+ nodes.forEach(n=>{if(!n.parentElement||['SCRIPT','STYLE','TEXTAREA','INPUT'].includes(n.parentElement.tagName))return;
+  const raw=n.nodeValue,trim=raw.trim(); if(dict[trim]) n.nodeValue=raw.replace(trim,dict[trim]);
+ });
+ document.querySelectorAll('[data-lang-select]').forEach(el=>el.value=lang);
+}
+window.oziqSetLanguage=function(value){lang=value;localStorage.setItem('oziq-lang',lang);location.reload()};
+document.addEventListener('DOMContentLoaded',()=>{
+ let holder=document.querySelector('[data-lang-select]');
+ if(!holder){
+  holder=document.createElement('select');holder.setAttribute('data-lang-select','');holder.setAttribute('aria-label','Language');
+  holder.innerHTML='<option value="uz">🇺🇿 UZ</option><option value="ru">🇷🇺 RU</option><option value="en">🇬🇧 EN</option>';
+  holder.style.cssText='padding:8px 10px;border-radius:12px;border:1px solid #cbd5e1;background:var(--card,#fff);color:var(--text,#0f172a);font:inherit;cursor:pointer';
+  const nav=document.querySelector('.nav-inner'); if(nav)nav.appendChild(holder);
+ }
+ holder.value=lang;holder.addEventListener('change',e=>window.oziqSetLanguage(e.target.value));
+ applyLanguage();
+});
+})();
+</script>
+
+<style>
+#oziq-chat-launch{position:fixed;right:22px;bottom:22px;z-index:9998;border:0;border-radius:50px;padding:14px 19px;background:#16a34a;color:#fff;font-weight:800;box-shadow:0 12px 35px #0003;cursor:pointer}
+#oziq-chat{display:none;position:fixed;right:22px;bottom:82px;width:min(370px,calc(100vw - 28px));height:min(510px,70vh);z-index:9999;background:#fff;color:#0f172a;border:1px solid #dbe3eb;border-radius:20px;box-shadow:0 20px 70px #0004;overflow:hidden;flex-direction:column;font:14px/1.45 system-ui,sans-serif}
+#oziq-chat.open{display:flex}#oziq-chat-head{background:#15803d;color:white;padding:15px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+#oziq-chat-log{padding:13px;overflow:auto;flex:1;background:#f8fafc} .oq-msg{padding:10px 12px;border-radius:13px;margin:7px 0;max-width:90%;white-space:pre-wrap}.oq-bot{background:#e8f7ed}.oq-user{background:#dcfce7;margin-left:auto}
+#oziq-chat-form{display:flex;gap:7px;padding:10px;border-top:1px solid #e2e8f0}#oziq-chat-input{min-width:0;flex:1;padding:11px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}#oziq-chat-form button{border:0;background:#16a34a;color:white;border-radius:10px;padding:0 14px;font-weight:700}
+</style>
+<button id="oziq-chat-launch" type="button" aria-label="Open AI assistant">✦ AI yordamchi</button>
+<section id="oziq-chat" aria-label="OziqMarket AI chat">
+ <div id="oziq-chat-head"><span>✦ OziqMarket yordamchi</span><button type="button" id="oziq-chat-close" style="background:transparent;border:0;color:white;font-size:22px;cursor:pointer">×</button></div>
+ <div id="oziq-chat-log"><div class="oq-msg oq-bot">Salom! Men OziqMarket yordamchisiman. Mahsulotlar, savat, buyurtma, yetkazish yoki ovqatlanish bo‘yicha savolingizni yozing. Men saytga oid ma’lumotlar bilan yordam beraman.</div></div>
+ <form id="oziq-chat-form"><input id="oziq-chat-input" placeholder="Savolingizni yozing..." autocomplete="off" required><button>Yuborish</button></form>
+</section>
+<script>
+(function(){
+const launch=document.getElementById('oziq-chat-launch'),panel=document.getElementById('oziq-chat'),log=document.getElementById('oziq-chat-log');
+if(!launch||!panel)return;
+launch.onclick=()=>panel.classList.add('open');document.getElementById('oziq-chat-close').onclick=()=>panel.classList.remove('open');
+function add(text,who){const d=document.createElement('div');d.className='oq-msg '+(who==='user'?'oq-user':'oq-bot');d.textContent=text;log.appendChild(d);log.scrollTop=log.scrollHeight}
+function answer(q){
+ const s=q.toLowerCase();
+ if(/salom|hello|привет/.test(s))return 'Salom! OziqMarket bo‘yicha nimada yordam beray? Mahsulot, narx, savat yoki buyurtma haqida so‘rashingiz mumkin.';
+ if(/savat|cart|корзин/.test(s))return 'Mahsulotni savatga qo‘shish uchun “Savatga qo‘shish” tugmasini bosing. Buyurtmani yakunlashdan oldin savatdagi miqdor va umumiy summani tekshiring.';
+ if(/buyurtma|zakaz|order|заказ/.test(s))return 'Buyurtma berish uchun mahsulotni savatga qo‘shing, savat sahifasini oching va buyurtma formasini to‘ldiring. Buyurtma holati saytdagi mavjud bo‘limda ko‘rsatiladi.';
+ if(/til|language|язык/.test(s))return 'Tilni yuqoridagi UZ / RU / EN tanlagichidan almashtirishingiz mumkin.';
+ if(/dark|qorong|tema|theme|тём|темн/.test(s))return 'Agar saytda mavzu tugmasi mavjud bo‘lsa, quyosh/oy belgisini bosib Light yoki Dark rejimini tanlang.';
+ if(/meva|sabzavot|vitamin|sog.lom|healthy|питани/.test(s))return 'Umumiy maslahat: ratsionda turli rangdagi meva-sabzavotlar, don mahsulotlari va oqsil manbalarini muvozanatli qo‘shing. Maxsus tibbiy yoki allergiya bo‘yicha maslahat uchun mutaxassisga murojaat qiling.';
+ if(/rasm|image|фото/.test(s))return 'Mahsulot rasmlari mavjud bo‘lsa kartada ko‘rinadi. Rasm ko‘rinmasa sahifani yangilang yoki mahsulot sahifasini qayta ochib ko‘ring.';
+ if(/narx|price|цена|chegirma|discount/.test(s))return 'Mahsulotning joriy narxi kartada ko‘rsatiladi. Chegirma bo‘lsa, odatda chegirma belgisi va yangi narx ham ko‘rinadi.';
+ if(/yetkaz|delivery|достав/.test(s))return 'Yetkazib berish muddati va shartlarini saytning aloqa yoki buyurtma bo‘limidan tekshiring. Men tasdiqlanmagan yetkazish vaqtini aytmayman.';
+ if(/login|kirish|ro.yxat|register|регистрац/.test(s))return 'Profil va buyurtmalar bilan ishlash uchun Kirish yoki Ro‘yxatdan o‘tish bo‘limidan foydalaning.';
+ return 'Savolingizni tushundim. Men hozir OziqMarket sayti, mahsulot tanlash, savat, buyurtma va umumiy oziq-ovqat bo‘yicha maslahatlarda yordam bera olaman. Aniq mahsulot nomi yoki muammoni yozing. Eslatma: bu versiya tashqi ChatGPT/AI API ga ulanmagan, shuning uchun barcha mavzuda ChatGPT kabi jonli bilimga ega emas.';
+}
+document.getElementById('oziq-chat-form').addEventListener('submit',async e=>{e.preventDefault();const input=document.getElementById('oziq-chat-input');const q=input.value.trim();if(!q)return;add(q,'user');input.value='';const wait=document.createElement('div');wait.className='oq-msg oq-bot';wait.textContent='Javob tayyorlanmoqda…';log.appendChild(wait);log.scrollTop=log.scrollHeight;try{const r=await fetch('/ai-chat/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':(document.cookie.match(/(?:^|; )csrftoken=([^;]+)/)||[])[1]||''},body:JSON.stringify({message:q})});const data=await r.json();wait.textContent=data.reply||'Javob olinmadi.';}catch(err){wait.textContent='AI xizmatiga ulanish amalga oshmadi. Keyinroq qayta urinib ko‘ring.';}log.scrollTop=log.scrollHeight});
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buyurtma qabul qilindi — OziqMarket</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#f8faf9;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:24px;padding:40px;max-width:440px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.08)}
+.icon{font-size:4rem;margin-bottom:16px}
+h1{font-size:1.5rem;margin-bottom:8px;color:#16a34a}
+p{color:#64748b;margin-bottom:8px}
+.info{background:#f8faf9;border-radius:12px;padding:16px;margin:20px 0;text-align:left;font-size:.9rem}
+a{display:inline-block;margin-top:12px;background:#16a34a;color:#fff;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:700}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">✅</div>
+  <h1>Buyurtma qabul qilindi!</h1>
+  <p>Buyurtma raqami: <strong>#{{ order.pk }}</strong></p>
+  <div class="info">
+    <p><strong>Ism:</strong> {{ order.full_name }}</p>
+    <p><strong>Telefon:</strong> {{ order.phone }}</p>
+    <p><strong>Manzil:</strong> {{ order.address }}</p>
+    <p><strong>Summa:</strong> {{ order.total }} so‘m {% if order.discount_percent %}(−{{ order.discount_percent }}%){% endif %}</p>
+    <p><strong>Status:</strong> {{ order.get_status_display }}</p>
+  </div>
+  <p>Tez orada operatorlarimiz siz bilan bog‘lanadi.</p>
+  <a href="/">Bosh sahifaga</a>
+</div>
+
+<script>
+(function(){
+const translations={
+uz:{'Home':'Bosh sahifa','Menu':'Menyu','Sale':'Chegirmalar','Like':'Yoqtirganlar','About':'Biz haqimizda','Contact':'Aloqa','Login':'Kirish','Register':'Ro‘yxatdan o‘tish','Cart':'Savat','Menu':'Menyu','Sale':'Chegirmalar','AI':'AI yordamchi','Like':'Yoqtirganlar','Retsept':'Retseptlar','Game':'O‘yin','About':'Biz haqimizda','Contact':'Aloqa','Login':'Kirish','Register':'Ro‘yxatdan o‘tish','Cart':'Savat','Bosh sahifa':'Bosh sahifa','Savat':'Savat','Kirish':'Kirish','Ro‘yxat':'Ro‘yxatdan o‘tish','Mahsulotlar':'Mahsulotlar','Add to cart':'Savatga qo‘shish','+ Savat':'+ Savat','Search':'Qidirish','Search products':'Mahsulot qidirish','Product not found':'Mahsulot topilmadi'},
+ru:{'Home':'Главная','Menu':'Меню','Sale':'Скидки','Like':'Избранное','About':'О нас','Contact':'Контакты','Login':'Войти','Register':'Регистрация','Cart':'Корзина','Bosh sahifa':'Главная','Menyu':'Меню','Chegirmalar':'Скидки','AI yordamchi':'ИИ-помощник','Yoqtirganlar':'Избранное','Retseptlar':'Рецепты','O‘yin':'Игра','Biz haqimizda':'О нас','Aloqa':'Контакты','Kirish':'Войти','Ro‘yxatdan o‘tish':'Регистрация','Savat':'Корзина','Mahsulotlar':'Товары','Savatga qo‘shish':'В корзину','+ Savat':'+ В корзину','Qidirish':'Поиск','Mahsulot qidirish':'Поиск товаров','Mahsulot topilmadi':'Товары не найдены','Tez yetkazish':'Быстрая доставка','Yangi mahsulot':'Свежие продукты','Yuborish':'Отправить','Sharhlar':'Отзывы','Narx':'Цена'},
+en:{'Home':'Home','Menu':'Menu','Sale':'Sale','Like':'Favorites','About':'About','Contact':'Contact','Login':'Login','Register':'Register','Cart':'Cart','Bosh sahifa':'Home','Menyu':'Menu','Chegirmalar':'Sale','AI yordamchi':'AI Assistant','Yoqtirganlar':'Favorites','Retseptlar':'Recipes','O‘yin':'Game','Biz haqimizda':'About','Aloqa':'Contact','Kirish':'Login','Ro‘yxatdan o‘tish':'Register','Savat':'Cart','Mahsulotlar':'Products','Savatga qo‘shish':'Add to cart','+ Savat':'+ Add to cart','Qidirish':'Search','Mahsulot qidirish':'Search products','Mahsulot topilmadi':'No products found','Tez yetkazish':'Fast delivery','Yangi mahsulot':'Fresh products','Yuborish':'Submit','Sharhlar':'Reviews','Narx':'Price'}
+};
+const imageMap=[
+[/oreo|pechen.*oreo|oreo.*pechen/i,'photo-1587049352851-8d4e89133924'],
+[/pichen|pechen|печень|cookie|biscuit|печенье/i,'photo-1499636136210-6f4ee915583e'],
+[/vafli|waffle|вафл/i,'photo-1562376552-0d160a2f238d'],
+[/keks|muffin|cupcake|маффин/i,'photo-1607958996333-41aef7caefaa'],
+[/shokolad|chocolate|шоколад/i,'photo-1511381939415-e44015466834'],
+[/tort|cake|пирог/i,'photo-1578985545062-69928b1dafee'],
+[/konfet|candy|karamel|карамел|конфет/i,'photo-1581798459219-318e76aecc7b'],
+[/chips|chipsi|чипс/i,'photo-1566478989037-eec170784d0b'],
+[/muzqaymoq|ice.?cream|морожен/i,'photo-1563805042-7684c019e1cb'],
+[/olma|apple|яблок/i,'photo-1560806887-1e4cd0b6cbd6'],
+[/banan|banana|банан/i,'photo-1571771894821-ce9b6c11b08e'],
+[/apelsin|orange|mandarin|апельсин|мандарин/i,'photo-1547514701-42782101795e'],
+[/uzum|grape|виноград/i,'photo-1537640538966-79f369143f8f'],
+[/pomidor|tomato|томат/i,'photo-1546094096-0df4bcaaa337'],
+[/sabzi|carrot|морковь/i,'photo-1445282768818-728615cc910a'],
+[/non|bread|baget|хлеб/i,'photo-1509440159596-0249088772ff'],
+[/sut|milk|qatiq|yogurt|молок|йогурт/i,'photo-1550583724-b2692b85b150'],
+[/go.sht|meat|mol|tovuq|chicken|мясо|куриц/i,'photo-1607623814075-e51df1bdc82f'],
+[/pishloq|cheese|сыр/i,'photo-1486297678162-eb2a19b0a32d'],
+[/tuxum|egg|яйц/i,'photo-1506976785307-8732e854ad03'],
+[/suv|water|ichimlik|juice|вода|сок/i,'photo-1548839140-29a749e1cf4d'],
+[/sabzavot|vegetable|salat|ko.kat|овощ/i,'photo-1540420773420-3366772f4999'],
+[/meva|fruit|фрукт/i,'photo-1610832958506-aa56368176cf']
+];
+const photo=id=>'https://images.unsplash.com/'+id+'?auto=format&fit=crop&w=800&q=82';
+window.OZIQ_IMAGES={fallback:photo('photo-1542838132-92c53300491e')};
+document.querySelectorAll('img[data-product-image]').forEach(img=>{
+ const text=(img.dataset.productImage||'')+' '+(img.dataset.category||'');
+ const found=imageMap.find(x=>x[0].test(text));
+ img.src=photo(found?found[1]:'photo-1542838132-92c53300491e');
+ img.onerror=()=>{img.onerror=null;img.src=window.OZIQ_IMAGES.fallback};
+});
+let lang=localStorage.getItem('oziq-lang')||'uz';
+function applyLanguage(){
+ document.documentElement.lang=lang;
+ const dict=translations[lang]||translations.uz;
+ // Translate exact standalone text nodes, preserving Django-rendered product/user data.
+ const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+ const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+ nodes.forEach(n=>{if(!n.parentElement||['SCRIPT','STYLE','TEXTAREA','INPUT'].includes(n.parentElement.tagName))return;
+  const raw=n.nodeValue,trim=raw.trim(); if(dict[trim]) n.nodeValue=raw.replace(trim,dict[trim]);
+ });
+ document.querySelectorAll('[data-lang-select]').forEach(el=>el.value=lang);
+}
+window.oziqSetLanguage=function(value){lang=value;localStorage.setItem('oziq-lang',lang);location.reload()};
+document.addEventListener('DOMContentLoaded',()=>{
+ let holder=document.querySelector('[data-lang-select]');
+ if(!holder){
+  holder=document.createElement('select');holder.setAttribute('data-lang-select','');holder.setAttribute('aria-label','Language');
+  holder.innerHTML='<option value="uz">🇺🇿 UZ</option><option value="ru">🇷🇺 RU</option><option value="en">🇬🇧 EN</option>';
+  holder.style.cssText='padding:8px 10px;border-radius:12px;border:1px solid #cbd5e1;background:var(--card,#fff);color:var(--text,#0f172a);font:inherit;cursor:pointer';
+  const nav=document.querySelector('.nav-inner'); if(nav)nav.appendChild(holder);
+ }
+ holder.value=lang;holder.addEventListener('change',e=>window.oziqSetLanguage(e.target.value));
+ applyLanguage();
+});
+})();
+</script>
+
+</body>
+</html>

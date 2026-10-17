@@ -1,0 +1,136 @@
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kirish — OziqMarket</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;background:linear-gradient(135deg,#ecfdf5,#f0fdf4);display:flex;align-items:center;justify-content:center;padding:20px}
+.wrap{width:100%;max-width:420px}
+.logo{text-align:center;font-size:1.8rem;font-weight:800;color:#16a34a;margin-bottom:24px}
+.logo span{color:#0f172a}
+.card{background:#fff;padding:36px;border-radius:22px;box-shadow:0 20px 50px rgba(0,0,0,.08)}
+.card h1{font-size:1.6rem;margin-bottom:6px}
+.card>p{color:#64748b;margin-bottom:24px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-weight:700;color:#374151;margin-bottom:6px;font-size:.9rem}
+.form-group input{width:100%;padding:13px 14px;border:1px solid #e2e8f0;border-radius:12px;font:inherit;outline:none;transition:.2s}
+.form-group input:focus{border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.12)}
+.btn{width:100%;padding:14px;background:#16a34a;color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;transition:.2s;margin-top:4px}
+.btn:hover{background:#15803d}
+.msg{padding:12px;border-radius:10px;margin-bottom:16px;font-size:.9rem}
+.msg.error{background:#fef2f2;color:#dc2626}
+.msg.success{background:#f0fdf4;color:#15803d}
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:#94a3b8;font-size:.85rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#e2e8f0}
+.social a{display:block;text-decoration:none;margin-bottom:10px}
+.social button{width:100%;height:48px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;font-size:.95rem;font-weight:700;transition:.2s;border:1px solid #e2e8f0;background:#fff}
+.social button:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.google{color:#374151}
+.github{background:#0f172a!important;color:#fff!important;border-color:#0f172a!important}
+.links{text-align:center;margin-top:20px;color:#64748b;font-size:.9rem}
+.links a{color:#16a34a;font-weight:700}
+.back{display:block;text-align:center;margin-top:14px;color:#64748b;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">Oziq<span>Market</span> 🥗</div>
+  <div class="card">
+    <h1>Kirish</h1>
+    <p>Hisobingizga kiring yoki Google orqali</p>
+    {% if messages %}{% for m in messages %}<div class="msg {% if 'error' in m.tags %}error{% else %}success{% endif %}">{{ m }}</div>{% endfor %}{% endif %}
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      <div class="form-group"><label>Login</label><input type="text" name="username" required autofocus placeholder="username"></div>
+      <div class="form-group"><label>Parol</label><input type="password" name="password" required placeholder="••••••"></div>
+      <button type="submit" class="btn">Kirish</button>
+    </form>
+    <div class="divider">yoki</div>
+    <div class="social">
+      <a href="{% provider_login_url 'google' %}"><button type="button" class="google">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Google orqali kirish
+      </button></a>
+      <a href="{% provider_login_url 'github' %}"><button type="button" class="github">
+        <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub orqali kirish
+      </button></a>
+    </div>
+    <div class="links">Hisobingiz yo‘qmi? <a href="/register/">Ro‘yxatdan o‘ting</a></div>
+    <a href="/" class="back">← Bosh sahifa</a>
+  </div>
+</div>
+
+<script>
+(function(){
+const translations={
+uz:{'Home':'Bosh sahifa','Menu':'Menyu','Sale':'Chegirmalar','Like':'Yoqtirganlar','About':'Biz haqimizda','Contact':'Aloqa','Login':'Kirish','Register':'Ro‘yxatdan o‘tish','Cart':'Savat','Menu':'Menyu','Sale':'Chegirmalar','AI':'AI yordamchi','Like':'Yoqtirganlar','Retsept':'Retseptlar','Game':'O‘yin','About':'Biz haqimizda','Contact':'Aloqa','Login':'Kirish','Register':'Ro‘yxatdan o‘tish','Cart':'Savat','Bosh sahifa':'Bosh sahifa','Savat':'Savat','Kirish':'Kirish','Ro‘yxat':'Ro‘yxatdan o‘tish','Mahsulotlar':'Mahsulotlar','Add to cart':'Savatga qo‘shish','+ Savat':'+ Savat','Search':'Qidirish','Search products':'Mahsulot qidirish','Product not found':'Mahsulot topilmadi'},
+ru:{'Home':'Главная','Menu':'Меню','Sale':'Скидки','Like':'Избранное','About':'О нас','Contact':'Контакты','Login':'Войти','Register':'Регистрация','Cart':'Корзина','Bosh sahifa':'Главная','Menyu':'Меню','Chegirmalar':'Скидки','AI yordamchi':'ИИ-помощник','Yoqtirganlar':'Избранное','Retseptlar':'Рецепты','O‘yin':'Игра','Biz haqimizda':'О нас','Aloqa':'Контакты','Kirish':'Войти','Ro‘yxatdan o‘tish':'Регистрация','Savat':'Корзина','Mahsulotlar':'Товары','Savatga qo‘shish':'В корзину','+ Savat':'+ В корзину','Qidirish':'Поиск','Mahsulot qidirish':'Поиск товаров','Mahsulot topilmadi':'Товары не найдены','Tez yetkazish':'Быстрая доставка','Yangi mahsulot':'Свежие продукты','Yuborish':'Отправить','Sharhlar':'Отзывы','Narx':'Цена'},
+en:{'Home':'Home','Menu':'Menu','Sale':'Sale','Like':'Favorites','About':'About','Contact':'Contact','Login':'Login','Register':'Register','Cart':'Cart','Bosh sahifa':'Home','Menyu':'Menu','Chegirmalar':'Sale','AI yordamchi':'AI Assistant','Yoqtirganlar':'Favorites','Retseptlar':'Recipes','O‘yin':'Game','Biz haqimizda':'About','Aloqa':'Contact','Kirish':'Login','Ro‘yxatdan o‘tish':'Register','Savat':'Cart','Mahsulotlar':'Products','Savatga qo‘shish':'Add to cart','+ Savat':'+ Add to cart','Qidirish':'Search','Mahsulot qidirish':'Search products','Mahsulot topilmadi':'No products found','Tez yetkazish':'Fast delivery','Yangi mahsulot':'Fresh products','Yuborish':'Submit','Sharhlar':'Reviews','Narx':'Price'}
+};
+const imageMap=[
+[/oreo|pechen.*oreo|oreo.*pechen/i,'photo-1587049352851-8d4e89133924'],
+[/pichen|pechen|печень|cookie|biscuit|печенье/i,'photo-1499636136210-6f4ee915583e'],
+[/vafli|waffle|вафл/i,'photo-1562376552-0d160a2f238d'],
+[/keks|muffin|cupcake|маффин/i,'photo-1607958996333-41aef7caefaa'],
+[/shokolad|chocolate|шоколад/i,'photo-1511381939415-e44015466834'],
+[/tort|cake|пирог/i,'photo-1578985545062-69928b1dafee'],
+[/konfet|candy|karamel|карамел|конфет/i,'photo-1581798459219-318e76aecc7b'],
+[/chips|chipsi|чипс/i,'photo-1566478989037-eec170784d0b'],
+[/muzqaymoq|ice.?cream|морожен/i,'photo-1563805042-7684c019e1cb'],
+[/olma|apple|яблок/i,'photo-1560806887-1e4cd0b6cbd6'],
+[/banan|banana|банан/i,'photo-1571771894821-ce9b6c11b08e'],
+[/apelsin|orange|mandarin|апельсин|мандарин/i,'photo-1547514701-42782101795e'],
+[/uzum|grape|виноград/i,'photo-1537640538966-79f369143f8f'],
+[/pomidor|tomato|томат/i,'photo-1546094096-0df4bcaaa337'],
+[/sabzi|carrot|морковь/i,'photo-1445282768818-728615cc910a'],
+[/non|bread|baget|хлеб/i,'photo-1509440159596-0249088772ff'],
+[/sut|milk|qatiq|yogurt|молок|йогурт/i,'photo-1550583724-b2692b85b150'],
+[/go.sht|meat|mol|tovuq|chicken|мясо|куриц/i,'photo-1607623814075-e51df1bdc82f'],
+[/pishloq|cheese|сыр/i,'photo-1486297678162-eb2a19b0a32d'],
+[/tuxum|egg|яйц/i,'photo-1506976785307-8732e854ad03'],
+[/suv|water|ichimlik|juice|вода|сок/i,'photo-1548839140-29a749e1cf4d'],
+[/sabzavot|vegetable|salat|ko.kat|овощ/i,'photo-1540420773420-3366772f4999'],
+[/meva|fruit|фрукт/i,'photo-1610832958506-aa56368176cf']
+];
+const photo=id=>'https://images.unsplash.com/'+id+'?auto=format&fit=crop&w=800&q=82';
+window.OZIQ_IMAGES={fallback:photo('photo-1542838132-92c53300491e')};
+document.querySelectorAll('img[data-product-image]').forEach(img=>{
+ const text=(img.dataset.productImage||'')+' '+(img.dataset.category||'');
+ const found=imageMap.find(x=>x[0].test(text));
+ img.src=photo(found?found[1]:'photo-1542838132-92c53300491e');
+ img.onerror=()=>{img.onerror=null;img.src=window.OZIQ_IMAGES.fallback};
+});
+let lang=localStorage.getItem('oziq-lang')||'uz';
+function applyLanguage(){
+ document.documentElement.lang=lang;
+ const dict=translations[lang]||translations.uz;
+ // Translate exact standalone text nodes, preserving Django-rendered product/user data.
+ const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+ const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+ nodes.forEach(n=>{if(!n.parentElement||['SCRIPT','STYLE','TEXTAREA','INPUT'].includes(n.parentElement.tagName))return;
+  const raw=n.nodeValue,trim=raw.trim(); if(dict[trim]) n.nodeValue=raw.replace(trim,dict[trim]);
+ });
+ document.querySelectorAll('[data-lang-select]').forEach(el=>el.value=lang);
+}
+window.oziqSetLanguage=function(value){lang=value;localStorage.setItem('oziq-lang',lang);location.reload()};
+document.addEventListener('DOMContentLoaded',()=>{
+ let holder=document.querySelector('[data-lang-select]');
+ if(!holder){
+  holder=document.createElement('select');holder.setAttribute('data-lang-select','');holder.setAttribute('aria-label','Language');
+  holder.innerHTML='<option value="uz">🇺🇿 UZ</option><option value="ru">🇷🇺 RU</option><option value="en">🇬🇧 EN</option>';
+  holder.style.cssText='padding:8px 10px;border-radius:12px;border:1px solid #cbd5e1;background:var(--card,#fff);color:var(--text,#0f172a);font:inherit;cursor:pointer';
+  const nav=document.querySelector('.nav-inner'); if(nav)nav.appendChild(holder);
+ }
+ holder.value=lang;holder.addEventListener('change',e=>window.oziqSetLanguage(e.target.value));
+ applyLanguage();
+});
+})();
+</script>
+
+</body>
+</html>

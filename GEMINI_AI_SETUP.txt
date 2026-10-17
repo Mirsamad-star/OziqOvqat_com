@@ -1,0 +1,11 @@
+OZIQMARKET AI CHAT SOZLASH
+
+Chatbotni jonli AI qilish uchun Google Gemini API kaliti kerak. API kalitini Google AI Studio orqali oling: https://aistudio.google.com/app/apikey
+
+Windows PowerShell (faqat joriy terminal uchun):
+$env:GEMINI_API_KEY="BU_YERGA_API_KALITNI_QOYING"
+python manage.py runserver
+
+Render kabi hostingda Environment / Environment Variables bo‘limida GEMINI_API_KEY nomli o‘zgaruvchi yarating va qiymatiga API kalitni kiriting, keyin deploy/restart qiling.
+
+Kalitni kodga yozmang va GitHubga yubormang. Gemini limitlari va bepul foydalanish shartlari Google tomonidan belgilanadi. Kaloriya javoblari taxminiy bo‘lishi mumkin; aniq qadoq yorlig‘i ustun hisoblanadi.
