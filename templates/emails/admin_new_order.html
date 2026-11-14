@@ -1,0 +1,28 @@
+{% extends "emails/base_email.html" %}
+{% block title %}Yangi buyurtma #{{ order.pk }}{% endblock %}
+{% block content %}
+<h1 style="margin:0 0 12px;font-size:22px;color:#1a1a1a;">🛒 Yangi buyurtma #{{ order.pk }}</h1>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;background:#fff8f3;border-radius:12px;border:1px solid #ffe0cc;">
+  <tr>
+    <td style="padding:16px 20px;font-size:14px;line-height:1.7;">
+      <strong>Mijoz:</strong> {{ order.full_name }}<br>
+      <strong>Telefon:</strong> {{ order.phone }}<br>
+      <strong>Manzil:</strong> {{ order.address }}<br>
+      {% if order.note %}<strong>Izoh:</strong> {{ order.note }}<br>{% endif %}
+      <strong>Holat:</strong> {{ status_display }}<br>
+      <strong>Jami:</strong> <span style="color:#ff6b00;font-weight:800;">{{ order.total }} so‘m</span>
+    </td>
+  </tr>
+</table>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+  {% for item in items %}
+  <tr>
+    <td style="padding:8px 0;font-size:14px;border-bottom:1px solid #f0f0f0;">{{ item.product_name }} × {{ item.quantity }}</td>
+    <td align="right" style="padding:8px 0;font-size:14px;border-bottom:1px solid #f0f0f0;">{{ item.subtotal }} so‘m</td>
+  </tr>
+  {% endfor %}
+</table>
+<p style="text-align:center;margin-top:24px;">
+  <a href="{{ site_url }}/adminpanel/" style="display:inline-block;padding:12px 24px;background:#ff6b00;color:#fff;text-decoration:none;border-radius:999px;font-weight:700;">Admin panel</a>
+</p>
+{% endblock %}

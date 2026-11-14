@@ -1,0 +1,20 @@
+{% extends "emails/base_email.html" %}
+{% block title %}Xush kelibsiz — Oziq Ovqat{% endblock %}
+{% block content %}
+<h1 style="margin:0 0 12px;font-size:22px;color:#1a1a1a;">Xush kelibsiz, {{ name }}! 🎉</h1>
+<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#444;">
+  Oziq Ovqat oilasiga qo‘shilganingizdan xursandmiz. Endi yangi mahsulotlar, chegirmalar va tez yetkazib berish siz uchun ochiq.
+</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0;background:#fff8f3;border-radius:12px;border:1px solid #ffe0cc;">
+  <tr>
+    <td style="padding:18px 20px;">
+      <p style="margin:0 0 8px;font-size:14px;color:#666;"><strong style="color:#ff6b00;">Login:</strong> {{ user.username }}</p>
+      {% if user.email %}<p style="margin:0;font-size:14px;color:#666;"><strong style="color:#ff6b00;">Email:</strong> {{ user.email }}</p>{% endif %}
+    </td>
+  </tr>
+</table>
+<p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#444;">Menyudan sevimli taomlaringizni tanlang va buyurtma bering!</p>
+<p style="text-align:center;margin:24px 0 0;">
+  <a href="{{ site_url }}/menu/" style="display:inline-block;padding:14px 28px;background:#ff6b00;color:#fff;text-decoration:none;border-radius:999px;font-weight:700;font-size:15px;">Menyuni ko‘rish</a>
+</p>
+{% endblock %}

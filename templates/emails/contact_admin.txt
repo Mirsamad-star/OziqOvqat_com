@@ -1,0 +1,5 @@
+Yangi aloqa xabari
+
+Ism: {{ name }}
+Aloqa: {{ contact }}
+Xabar: {{ message }}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Oziq Ovqat{% endblock %}</title>
+</head>
+<body style="margin:0;padding:0;background:#f5f5f5;font-family:'Segoe UI',Arial,sans-serif;color:#1a1a1a;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:24px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);">
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#ff6b00 0%,#ff8533 100%);padding:28px 32px;text-align:center;">
+              <div style="font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.5px;">🍊 Oziq Ovqat</div>
+              <div style="font-size:13px;color:rgba(255,255,255,.9);margin-top:6px;">Yangi zamonaviy oziq-ovqat do‘koni</div>
+            </td>
+          </tr>
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px 28px;">
+              {% block content %}{% endblock %}
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="background:#fafafa;padding:20px 28px;border-top:1px solid #eee;text-align:center;">
+              <p style="margin:0 0 8px;font-size:13px;color:#666;">Savollaringiz bormi? Bizga yozing yoki saytga qayting.</p>
+              <a href="{{ site_url }}" style="display:inline-block;margin-top:8px;padding:10px 22px;background:#ff6b00;color:#fff;text-decoration:none;border-radius:999px;font-weight:700;font-size:14px;">Saytga o‘tish</a>
+              <p style="margin:16px 0 0;font-size:11px;color:#999;">© Oziq Ovqat. Bu xat avtomatik yuborilgan.</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -1,0 +1,11 @@
+Xush kelibsiz, {{ name }}!
+
+Oziq Ovqat oilasiga qo‘shilganingizdan xursandmiz.
+
+Login: {{ user.username }}
+{% if user.email %}Email: {{ user.email }}{% endif %}
+
+Menyu: {{ site_url }}/menu/
+Sayt: {{ site_url }}
+
+— Oziq Ovqat jamoasi

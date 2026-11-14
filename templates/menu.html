@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="{{ LANG|default:'uz' }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ T.menu }} — OziqMarket</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--g:#16a34a;--gd:#15803d;--gl:#dcfce7;--bg:#f4f7f5;--t:#0f172a;--m:#64748b;--b:#e2e8f0;--sh:0 12px 40px rgba(15,23,42,.08);--r:18px}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--t)}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+.nav{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--b)}
+.nav-inner{width:min(1200px,92%);margin:0 auto;padding:14px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-size:1.35rem;font-weight:800;color:var(--g)}.logo span{color:var(--t)}
+.nav a.l{padding:8px 12px;border-radius:999px;font-weight:600;font-size:.88rem}
+.nav a.l:hover{background:var(--gl);color:var(--gd)}
+.lang{display:flex;gap:4px;background:#f1f5f9;padding:4px;border-radius:999px}
+.lang a{padding:6px 10px;border-radius:999px;font-weight:800;font-size:.75rem;color:#64748b}
+.lang a.active{background:#16a34a;color:#fff}
+.container{width:min(1200px,92%);margin:0 auto;padding:28px 0 60px}
+h1{font-size:1.75rem;font-weight:800;margin-bottom:6px}
+.sub{color:var(--m);margin-bottom:22px}
+.search{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.search input{flex:1;min-width:200px;padding:13px 16px;border:1px solid var(--b);border-radius:14px;font:inherit;outline:none}
+.search button{padding:13px 20px;background:var(--g);color:#fff;border:0;border-radius:14px;font-weight:700;cursor:pointer}
+.cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.chip{padding:8px 14px;border-radius:999px;background:#fff;border:1px solid var(--b);font-weight:600;font-size:.85rem}
+.chip.active,.chip:hover{background:var(--g);color:#fff;border-color:var(--g)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+.card{background:#fff;border:1px solid var(--b);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:.3s;box-shadow:var(--sh)}
+.card:hover{transform:translateY(-6px)}
+.card-img{position:relative;height:190px;background:linear-gradient(135deg,#e2e8f0,#f1f5f9);overflow:hidden}
+.card-img img{width:100%;height:100%;object-fit:cover}
+.sale{position:absolute;top:12px;left:12px;background:#ef4444;color:#fff;font-size:.75rem;font-weight:800;padding:4px 10px;border-radius:999px}
+.body{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.cat{font-size:.72rem;font-weight:800;color:var(--g);text-transform:uppercase}
+.name{font-weight:800;font-size:1.02rem;min-height:2.5em}
+.stars{color:#f59e0b;letter-spacing:2px}
+.stars span{color:var(--m);letter-spacing:0;font-size:.8rem;font-weight:600}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;flex-wrap:wrap}
+.price{font-weight:800;color:var(--g);font-size:1.1rem}
+.btns{display:flex;gap:6px}
+.btn{padding:9px 12px;border-radius:10px;font-weight:700;font-size:.82rem;border:0;cursor:pointer}
+.btn-g{background:var(--g);color:#fff}
+.btn-o{background:#fff;border:2px solid var(--g);color:var(--g)}
+.empty{text-align:center;padding:48px;color:var(--m);background:#fff;border-radius:var(--r);grid-column:1/-1}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a href="/" class="logo">Oziq<span>Market</span></a>
+  <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+    <a class="l" href="/">{{ T.home }}</a>
+    <a class="l" href="/about/">{{ T.about }}</a>
+    <a class="l" href="/contact/">{{ T.contact }}</a>
+    {% if user.is_authenticated %}
+    <a class="l" href="/cart/">🛒 {{ cart_count|default:0 }}</a>
+    <a class="l" href="/logout/">{{ T.logout }}</a>
+    {% else %}
+    <a class="l" href="/login/">{{ T.login }}</a>
+    <a class="l" href="/register/">{{ T.register }}</a>
+    {% endif %}
+    
+  </div>
+</div></nav>
+
+<div class="container">
+  <h1>📋 {{ T.full_menu }}</h1>
+  <p class="sub">{{ T.menu_sub }}</p>
+  <form class="search" method="get">
+    <input type="text" name="q" value="{{ q }}" placeholder="{{ T.search_ph }}">
+    {% if current_cat %}<input type="hidden" name="cat" value="{{ current_cat }}">{% endif %}
+    <button type="submit">{{ T.search }}</button>
+  </form>
+  <div class="cats">
+    <a class="chip {% if not current_cat %}active{% endif %}" href="/menu/?lang={{ LANG }}">{{ T.all }}</a>
+    {% for c in categories %}
+    <a class="chip {% if current_cat == c.slug %}active{% endif %}" href="/menu/?cat={{ c.slug }}&lang={{ LANG }}">{{ c.icon|default:"📦" }} {{ c.name }}</a>
+    {% endfor %}
+  </div>
+  <div class="grid">
+    {% for p in products %}
+    <article class="card">
+      <a href="{% url 'product_detail' p.id %}" class="card-img">
+        {% if p.sale %}<span class="sale">-{{ p.sale }}%</span>{% endif %}
+        <img src="{{ p.get_cover }}" alt="{{ p.name }}" loading="lazy"
+             onerror="this.onerror=null;this.src='https://placehold.co/800x800/16a34a/fff?text={{ p.name|urlencode }}'">
+      </a>
+      <div class="body">
+        <div class="cat">{{ p.category.name|default:"—" }}</div>
+        <a class="name" href="{% url 'product_detail' p.id %}">{{ p.name }}</a>
+        <div class="stars">{% for i in "12345" %}{% if forloop.counter <= p.rating %}★{% else %}☆{% endif %}{% endfor %}
+          <span>{{ p.rating }}/5</span></div>
+        <div class="row">
+          <div class="price">{{ p.final_price }} {{ T.price }}</div>
+          <div class="btns">
+            <a class="btn btn-o" href="{% url 'product_detail' p.id %}">{{ T.details }}</a>
+            <button class="btn btn-g" type="button" onclick="addCart({{ p.id }})">{{ T.add_cart }}</button>
+          </div>
+        </div>
+      </div>
+    </article>
+    {% empty %}
+    <div class="empty">{{ T.no_products }}<br><small>python manage.py seed_demo</small></div>
+    {% endfor %}
+  </div>
+</div>
+<script>
+const CSRF=(document.cookie.match(/(?:^|; )csrftoken=([^;]+)/)||[])[1]||'';
+const AUTH={{ user.is_authenticated|yesno:"true,false" }};
+async function addCart(id){
+  if(!AUTH){location.href='/login/?next=/menu/';return}
+  const fd=new FormData();fd.append('quantity',1);
+  const r=await fetch('/cart/add/'+id+'/',{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd});
+  if(r.status===401){location.href='/login/?next=/menu/';return}
+  const d=await r.json().catch(()=>({}));
+  alert(d.ok!==false?'OK':(d.error||'Error'));
+}
+</script>
+</body>
+</html>

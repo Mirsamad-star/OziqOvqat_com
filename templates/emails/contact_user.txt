@@ -1,0 +1,7 @@
+Rahmat, {{ name }}!
+
+Xabaringiz qabul qilindi. Tez orada javob beramiz.
+
+Xabar: {{ message }}
+
+— Oziq Ovqat

@@ -1,0 +1,11 @@
+Buyurtma holati yangilandi
+
+Hurmatli {{ name }},
+#{{ order.pk }}-buyurtmangiz yangi holati: {{ status_display }}
+
+Jami: {{ order.total }} so‘m
+Manzil: {{ order.address }}
+
+{{ site_url }}/order/success/{{ order.pk }}/
+
+— Oziq Ovqat

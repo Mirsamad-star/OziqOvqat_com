@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="{{ LANG|default:'uz' }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ T.contact }} — OziqMarket</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--g:#16a34a;--gd:#15803d;--gl:#dcfce7;--bg:#f4f7f5;--t:#0f172a;--m:#64748b;--b:#e2e8f0}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--t);min-height:100vh}
+a{text-decoration:none;color:inherit}
+.nav{background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--b);position:sticky;top:0;z-index:20}
+.nav-inner{width:min(1000px,92%);margin:0 auto;padding:14px 0;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{font-weight:800;font-size:1.3rem;color:var(--g)}.logo span{color:var(--t)}
+.nav-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.nav-links a{padding:8px 12px;border-radius:999px;font-weight:600;font-size:.88rem}
+.nav-links a:hover{background:var(--gl);color:var(--gd)}
+.lang{display:flex;gap:4px;background:#f1f5f9;padding:4px;border-radius:999px}
+.lang a{padding:6px 10px;border-radius:999px;font-weight:800;font-size:.75rem;color:#64748b}
+.lang a.active{background:#16a34a;color:#fff}
+.wrap{width:min(920px,92%);margin:36px auto 60px;display:grid;grid-template-columns:1fr 1.1fr;gap:28px}
+@media(max-width:760px){.wrap{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--b);border-radius:22px;padding:28px;box-shadow:0 12px 40px rgba(15,23,42,.06)}
+.card h1{font-size:1.5rem;margin-bottom:8px}
+.card p.sub{color:var(--m);margin-bottom:22px;line-height:1.5}
+label{display:block;font-weight:700;font-size:.88rem;margin-bottom:6px}
+input,textarea{width:100%;padding:13px 14px;border:1px solid var(--b);border-radius:12px;font:inherit;outline:none;transition:.2s;margin-bottom:14px}
+input:focus,textarea:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(22,163,74,.12)}
+button{width:100%;padding:14px;background:var(--g);color:#fff;border:0;border-radius:12px;font-weight:800;font-size:1rem;cursor:pointer}
+button:hover{background:var(--gd)}
+.info li{list-style:none;padding:12px 0;border-bottom:1px solid #f1f5f9;display:flex;gap:12px}
+.icon{width:40px;height:40px;border-radius:12px;background:var(--gl);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a href="/" class="logo">Oziq<span>Market</span></a>
+  <div class="nav-links">
+    <a href="/">{{ T.home }}</a>
+    <a href="/menu/">{{ T.menu }}</a>
+    <a href="/cart/">{{ T.cart }}</a>
+    
+  </div>
+</div></nav>
+<div class="wrap">
+  <div class="card info">
+    <h1>{{ T.contact_title }}</h1>
+    <p class="sub">{{ T.contact_sub }}</p>
+    <ul>
+      <li><span class="icon">📞</span><div><strong>{{ T.phone }}</strong><br>+998 90 123 45 67</div></li>
+      <li><span class="icon">✉️</span><div><strong>{{ T.email }}</strong><br>info@oziqmarket.uz</div></li>
+      <li><span class="icon">📍</span><div><strong>{{ T.address }}</strong><br>Toshkent, O‘zbekiston</div></li>
+      <li><span class="icon">🕐</span><div><strong>{{ T.hours }}</strong><br>{{ T.hours_val }}</div></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h1>{{ T.send_msg }}</h1>
+    <p class="sub">{{ T.send_sub }}</p>
+    <form method="post" action="{% url 'contact' %}">
+      {% csrf_token %}
+      <label>{{ T.name }}</label>
+      <input name="name" required placeholder="{{ T.name }}" autocomplete="name">
+      <label>{{ T.phone_or_email }}</label>
+      <input name="phone" required placeholder="+998 90 ... / email@mail.com">
+      <label>{{ T.message }}</label>
+      <textarea name="message" rows="5" required placeholder="{{ T.message }}"></textarea>
+      <button type="submit">{{ T.send }}</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

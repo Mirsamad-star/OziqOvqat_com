@@ -1,0 +1,13 @@
+Yangi buyurtma #{{ order.pk }}
+
+Mijoz: {{ order.full_name }}
+Telefon: {{ order.phone }}
+Manzil: {{ order.address }}
+{% if order.note %}Izoh: {{ order.note }}
+{% endif %}Holat: {{ status_display }}
+Jami: {{ order.total }} so‘m
+
+Mahsulotlar:
+{% for item in items %}- {{ item.product_name }} x{{ item.quantity }} = {{ item.subtotal }} so‘m
+{% endfor %}
+Admin: {{ site_url }}/adminpanel/

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ product.name }} — OziqMarket</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#16a34a;--green-dark:#15803d;--green-light:#dcfce7;--bg:#f4f7f5;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--orange:#ff6b00;--shadow:0 12px 40px rgba(15,23,42,.08);--radius:20px}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+.container{width:min(1100px,92%);margin:0 auto}
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0;gap:12px;flex-wrap:wrap}
+.logo{font-size:1.35rem;font-weight:800;color:var(--green)}.logo span{color:var(--text)}
+.nav a{font-weight:600;font-size:.9rem;padding:8px 12px;border-radius:999px}
+.nav a:hover{background:var(--green-light);color:var(--green-dark)}
+.breadcrumb{padding:16px 0;font-size:.88rem;color:var(--muted)}
+.breadcrumb a{color:var(--green);font-weight:600}
+.layout{display:grid;grid-template-columns:1.05fr 1fr;gap:32px;padding:8px 0 40px}
+@media(max-width:860px){.layout{grid-template-columns:1fr}}
+.gallery{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow)}
+.main-img{aspect-ratio:1/1;background:#f1f5f9;position:relative}
+.main-img img{width:100%;height:100%;object-fit:cover}
+.thumbs{display:flex;gap:10px;padding:12px;flex-wrap:wrap}
+.thumbs button{width:72px;height:72px;border-radius:12px;overflow:hidden;border:2px solid transparent;padding:0;cursor:pointer;background:#f8fafc}
+.thumbs button.active,.thumbs button:hover{border-color:var(--green)}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.info{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:28px;box-shadow:var(--shadow)}
+.cat{display:inline-block;font-size:.75rem;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+h1{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:800;margin-bottom:10px;line-height:1.25}
+.stars{color:#f59e0b;letter-spacing:2px;margin-bottom:12px}
+.price-row{display:flex;align-items:baseline;gap:12px;margin:16px 0 20px;flex-wrap:wrap}
+.price{font-size:1.8rem;font-weight:800;color:var(--green)}
+.old-price{text-decoration:line-through;color:var(--muted);font-size:1rem}
+.sale-tag{background:#fef2f2;color:#dc2626;font-weight:700;font-size:.8rem;padding:4px 10px;border-radius:999px}
+.desc{color:#334155;margin-bottom:20px;white-space:pre-wrap}
+.meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+.chip{background:#f1f5f9;padding:6px 12px;border-radius:999px;font-size:.82rem;font-weight:600;color:#475569}
+.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:18px}
+.qty{display:flex;align-items:center;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.qty button{width:40px;height:44px;border:0;background:#f8fafc;font-size:1.1rem;cursor:pointer;font-weight:700}
+.qty input{width:52px;height:44px;border:0;text-align:center;font-weight:700;font-size:1rem}
+.btn{border:0;border-radius:12px;padding:12px 20px;font-weight:700;cursor:pointer;font-size:.95rem;transition:.2s}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:var(--green-dark);transform:translateY(-1px);box-shadow:0 8px 20px rgba(22,163,74,.28)}
+.btn-outline{background:#fff;border:2px solid var(--green);color:var(--green)}
+.btn-outline:hover{background:var(--green-light)}
+.btn:active{transform:scale(.97)}
+.like-row{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:.9rem}
+.section{margin:28px 0 48px}
+.section h2{font-size:1.25rem;font-weight:800;margin-bottom:16px}
+.review-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+.review-form{display:grid;gap:12px;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.review-form label{font-weight:700;font-size:.88rem}
+.review-form input,.review-form textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;font:inherit;outline:none}
+.review-form input:focus,.review-form textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,.12)}
+.star-pick{display:flex;gap:6px;font-size:1.6rem;cursor:pointer;user-select:none}
+.star-pick span{opacity:.35;transition:.15s}.star-pick span.on,.star-pick span:hover{opacity:1;color:#f59e0b}
+.review-item{padding:16px 0;border-bottom:1px solid #f1f5f9}
+.review-item:last-child{border:0}
+.review-head{display:flex;justify-content:space-between;gap:12px;margin-bottom:6px;flex-wrap:wrap}
+.review-name{font-weight:700}.review-date{color:var(--muted);font-size:.82rem}
+.related{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
+.rel-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:.25s}
+.rel-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.rel-card img{width:100%;height:140px;object-fit:cover;background:#f1f5f9}
+.rel-card .body{padding:12px}
+.toast{position:fixed;bottom:24px;right:24px;background:#0f172a;color:#fff;padding:14px 20px;border-radius:12px;font-weight:600;z-index:100;transform:translateY(120%);opacity:0;transition:.3s}
+.toast.show{transform:none;opacity:1}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="container nav-inner">
+  <a href="/" class="logo">Oziq<span>Market</span></a>
+  <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
+    <a href="/">{{ T.home }}</a>
+    <a href="/menu/">{{ T.menu }}</a>
+    <a href="/cart/">🛒 {{ T.cart }} ({{ cart_count }})</a>
+    {% if user.is_authenticated %}<a href="/logout/">{{ T.logout }}</a>{% else %}<a href="/login/">{{ T.login }}</a>{% endif %}
+    
+  </div>
+</div></nav>
+
+<div class="container">
+  <div class="breadcrumb"><a href="/">Bosh sahifa</a> · <a href="/menu/">Menyu</a>{% if product.category %} · <a href="/menu/?cat={{ product.category.slug }}">{{ product.category.name }}</a>{% endif %} · {{ product.name }}</div>
+
+  <div class="layout">
+    <div class="gallery">
+      <div class="main-img" id="mainImgWrap">
+        {% if images %}
+          <img id="mainImg" src="{{ images.0 }}" alt="{{ product.name }}" onerror="this.onerror=null;this.src='https://placehold.co/900x900/16a34a/fff?text={{ product.name|urlencode }}'">
+        {% else %}
+          <img id="mainImg" src="https://placehold.co/900x900/16a34a/fff?text={{ product.name|urlencode }}" alt="{{ product.name }}">
+        {% endif %}
+      </div>
+      {% if images|length > 1 %}
+      <div class="thumbs" id="thumbs">
+        {% for img in images %}
+        <button type="button" class="{% if forloop.first %}active{% endif %}" data-src="{{ img }}" onclick="setMain(this)">
+          <img src="{{ img }}" alt="">
+        </button>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="info">
+      <div class="cat">{{ product.category.name|default:"Umumiy" }}</div>
+      <h1>{{ product.name }}</h1>
+      <div class="stars" title="Reyting">
+        {% widthratio product.review_average|default:product.rating 1 1 as avg %}
+        ★★★★★
+        <span style="color:var(--muted);letter-spacing:0;font-size:.9rem;margin-left:6px">
+          {{ product.review_average|default:product.rating|floatformat:1 }}/5
+          {% if product.review_count %} · {{ product.review_count }} sharh{% endif %}
+        </span>
+      </div>
+      <div class="price-row">
+        <span class="price">{{ product.final_price }} so‘m</span>
+        {% if product.sale %}<span class="old-price">{{ product.price }} so‘m</span><span class="sale-tag">-{{ product.sale }}%</span>{% endif %}
+      </div>
+      <div class="desc">{{ product.about }}</div>
+      <div class="meta">
+        <span class="chip">📦 {{ product.unit }}</span>
+        {% if product.size %}<span class="chip">📏 {{ product.size }}</span>{% endif %}
+        {% if product.color %}<span class="chip">🎨 {{ product.color }}</span>{% endif %}
+        <span class="chip">❤️ {{ product.likes_count }}</span>
+      </div>
+      <div class="actions">
+        <div class="qty">
+          <button type="button" onclick="chg(-1)">−</button>
+          <input type="number" id="qty" value="{{ product.min_count|default:1 }}" min="{{ product.min_count|default:1 }}">
+          <button type="button" onclick="chg(1)">+</button>
+        </div>
+        <button class="btn btn-green" type="button" onclick="addCart()">🛒 Savatga qo‘shish</button>
+        <button class="btn btn-outline" type="button" id="likeBtn" onclick="toggleLike()">{{ liked|yesno:"❤️ Like olindi,🤍 Like" }}</button>
+        <button class="btn btn-outline" type="button" onclick="shareLink()">🔗 Ulashish</button>
+      </div>
+      <div class="like-row"><span id="likeCount">{{ product.likes_count }}</span> ta like · Min. buyurtma: {{ product.min_count }} {{ product.unit }}</div>
+    </div>
+  </div>
+
+  <section class="section">
+    <h2>💬 Sharhlar va yulduzlar</h2>
+    <div class="review-box">
+      <form class="review-form" id="reviewForm" onsubmit="return sendReview(event)">
+        <div>
+          <label>Ismingiz</label>
+          <input name="name" id="rName" required placeholder="Ismingiz" value="{% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% endif %}">
+        </div>
+        <div>
+          <label>Yulduzlar</label>
+          <div class="star-pick" id="starPick">
+            <span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span>
+          </div>
+          <input type="hidden" name="rating" id="rRating" value="5">
+        </div>
+        <div>
+          <label>Kommentariya</label>
+          <textarea name="comment" id="rComment" rows="3" required maxlength="1000" placeholder="Mahsulot haqida fikringiz..."></textarea>
+        </div>
+        <button class="btn btn-green" type="submit" style="justify-self:start">Yuborish</button>
+      </form>
+      <div id="reviewList">
+        {% for r in reviews %}
+        <div class="review-item">
+          <div class="review-head">
+            <span class="review-name">{{ r.name }} · <span style="color:#f59e0b">{% for i in "12345" %}{% if forloop.counter <= r.rating %}★{% else %}☆{% endif %}{% endfor %}</span></span>
+            <span class="review-date">{{ r.created_at|date:"d.m.Y H:i" }}</span>
+          </div>
+          <p>{{ r.comment }}</p>
+        </div>
+        {% empty %}
+        <p style="color:var(--muted)">Hali sharh yo‘q. Birinchi bo‘lib yozing!</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {% if related %}
+  <section class="section">
+    <h2>O‘xshash mahsulotlar</h2>
+    <div class="related">
+      {% for p in related %}
+      <a class="rel-card" href="{% url 'product_detail' p.id %}">
+        {% with cover=p.get_cover %}
+        <img src="{% if cover %}{{ cover }}{% else %}https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=70{% endif %}" alt="{{ p.name }}">
+        {% endwith %}
+        <div class="body">
+          <strong style="font-size:.92rem">{{ p.name }}</strong>
+          <div style="color:var(--green);font-weight:800;margin-top:4px">{{ p.final_price }} so‘m</div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const PID={{ product.id }};
+const CSRF=(document.cookie.match(/(?:^|; )csrftoken=([^;]+)/)||[])[1]||'';
+const IS_AUTH={{ user.is_authenticated|yesno:"true,false" }};
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function setMain(btn){document.getElementById('mainImg').src=btn.dataset.src;document.querySelectorAll('#thumbs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
+function chg(d){const i=document.getElementById('qty');let v=parseInt(i.value||1)+d;const mn=parseInt(i.min||1);if(v<mn)v=mn;i.value=v}
+async function addCart(){
+  if(!IS_AUTH){toast('Avval tizimga kiring');location.href='/login/?next='+location.pathname;return}
+  const qty=document.getElementById('qty').value||1;
+  const fd=new FormData();fd.append('quantity',qty);
+  const r=await fetch('/cart/add/'+PID+'/',{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd});
+  const d=await r.json().catch(()=>({}));
+  if(r.status===401){location.href='/login/?next='+location.pathname;return}
+  toast(d.ok!==false?'Savatga qo‘shildi!':(d.error||'Xato'));
+}
+async function toggleLike(){
+  const r=await fetch('/product/'+PID+'/like/',{method:'POST',headers:{'X-CSRFToken':CSRF}});
+  const d=await r.json();
+  if(d.ok){document.getElementById('likeBtn').textContent=d.liked?'❤️ Like olindi':'🤍 Like';document.getElementById('likeCount').textContent=d.likes;toast(d.liked?'Like qo‘yildi':'Like olindi')}
+}
+function shareLink(){navigator.clipboard.writeText(location.href).then(()=>toast('Havola nusxalandi!')).catch(()=>toast(location.href))}
+// stars
+let rating=5;
+const stars=[...document.querySelectorAll('#starPick span')];
+function paint(n){stars.forEach(s=>s.classList.toggle('on',parseInt(s.dataset.v)<=n))}
+paint(5);
+stars.forEach(s=>{s.onclick=()=>{rating=parseInt(s.dataset.v);document.getElementById('rRating').value=rating;paint(rating)};s.onmouseenter=()=>paint(parseInt(s.dataset.v));});
+document.getElementById('starPick').onmouseleave=()=>paint(rating);
+async function sendReview(e){
+  e.preventDefault();
+  const fd=new FormData();
+  fd.append('name',document.getElementById('rName').value);
+  fd.append('comment',document.getElementById('rComment').value);
+  fd.append('rating',document.getElementById('rRating').value);
+  const r=await fetch('/product/'+PID+'/reviews/add/',{method:'POST',headers:{'X-CSRFToken':CSRF},body:fd});
+  const d=await r.json();
+  if(!d.ok){toast(d.error||'Xato');return false}
+  toast(d.message||'Saqlandi');
+  const list=document.getElementById('reviewList');
+  const starsTxt='★'.repeat(d.review.rating)+'☆'.repeat(5-d.review.rating);
+  list.insertAdjacentHTML('afterbegin',`<div class="review-item"><div class="review-head"><span class="review-name">${d.review.name} · <span style="color:#f59e0b">${starsTxt}</span></span><span class="review-date">${d.review.created_at}</span></div><p>${d.review.comment}</p></div>`);
+  document.getElementById('rComment').value='';
+  return false;
+}
+</script>
+</body>
+</html>

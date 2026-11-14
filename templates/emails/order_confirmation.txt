@@ -1,0 +1,20 @@
+Buyurtma qabul qilindi ✅
+
+Hurmatli {{ name }}, buyurtmangiz muvaffaqiyatli qabul qilindi.
+
+Buyurtma №: #{{ order.pk }}
+Holat: {{ status_display }}
+Telefon: {{ order.phone }}
+Manzil: {{ order.address }}
+
+Mahsulotlar:
+{% for item in items %}- {{ item.product_name }} x{{ item.quantity }} = {{ item.subtotal }} so‘m
+{% endfor %}
+{% if order.discount_percent %}Chegirma: {{ order.discount_percent }}%
+{% endif %}
+Jami: {{ order.total }} so‘m
+
+Buyurtma: {{ site_url }}/order/success/{{ order.pk }}/
+Sayt: {{ site_url }}
+
+— Oziq Ovqat

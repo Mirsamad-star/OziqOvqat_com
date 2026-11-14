@@ -1,0 +1,19 @@
+{% extends "emails/base_email.html" %}
+{% block title %}Buyurtma #{{ order.pk }} holati — Oziq Ovqat{% endblock %}
+{% block content %}
+<h1 style="margin:0 0 8px;font-size:22px;color:#1a1a1a;">Buyurtma holati yangilandi</h1>
+<p style="margin:0 0 20px;font-size:15px;color:#444;">Hurmatli <strong>{{ name }}</strong>, #{{ order.pk }}-buyurtmangiz holati o‘zgardi.</p>
+
+<div style="text-align:center;margin:24px 0;">
+  <span style="display:inline-block;padding:12px 24px;background:#fff8f3;border:2px solid #ff6b00;border-radius:12px;font-size:18px;font-weight:800;color:#ff6b00;">
+    {{ status_display }}
+  </span>
+</div>
+
+<p style="margin:0 0 8px;font-size:14px;color:#666;">Jami summa: <strong>{{ order.total }} so‘m</strong></p>
+<p style="margin:0 0 24px;font-size:14px;color:#666;">Manzil: {{ order.address }}</p>
+
+<p style="text-align:center;">
+  <a href="{{ site_url }}/order/success/{{ order.pk }}/" style="display:inline-block;padding:14px 28px;background:#ff6b00;color:#fff;text-decoration:none;border-radius:999px;font-weight:700;font-size:15px;">Buyurtmani ko‘rish</a>
+</p>
+{% endblock %}

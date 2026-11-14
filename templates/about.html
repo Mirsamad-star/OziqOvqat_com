@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="{{ LANG|default:'uz' }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ T.about }} — OziqMarket</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--g:#16a34a;--gd:#15803d;--gl:#dcfce7;--bg:#f4f7f5;--t:#0f172a;--m:#64748b;--b:#e2e8f0;--sh:0 12px 40px rgba(15,23,42,.07)}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--t);line-height:1.6}
+a{text-decoration:none;color:inherit}
+.nav{background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--b);position:sticky;top:0;z-index:20}
+.nav-inner{width:min(1100px,92%);margin:0 auto;padding:14px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.logo{font-weight:800;font-size:1.3rem;color:var(--g)}.logo span{color:var(--t)}
+.nav-links{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.nav-links a{padding:8px 12px;border-radius:999px;font-weight:600;font-size:.88rem}
+.nav-links a:hover{background:var(--gl);color:var(--gd)}
+.lang{display:flex;gap:4px;background:#f1f5f9;padding:4px;border-radius:999px}
+.lang a{padding:6px 10px;border-radius:999px;font-weight:800;font-size:.75rem;color:#64748b}
+.lang a.active{background:#16a34a;color:#fff}
+.hero{background:linear-gradient(135deg,#ecfdf5,#fff);border-bottom:1px solid var(--b);padding:48px 0}
+.container{width:min(1100px,92%);margin:0 auto}
+.hero h1{font-size:clamp(1.8rem,4vw,2.4rem);font-weight:800;margin-bottom:12px}
+.hero p{color:var(--m);max-width:560px}
+.section{padding:40px 0}
+.section h2{font-size:1.4rem;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.card{background:#fff;border:1px solid var(--b);border-radius:18px;overflow:hidden;transition:.25s;box-shadow:var(--sh)}
+.card:hover{transform:translateY(-4px)}
+.card img{width:100%;height:150px;object-fit:cover;background:#e2e8f0}
+.card .body{padding:14px}
+.stars{color:#f59e0b;letter-spacing:1px}
+.price{color:var(--g);font-weight:800;margin-top:6px}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.feat{background:#fff;border:1px solid var(--b);border-radius:16px;padding:20px}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a href="/" class="logo">Oziq<span>Market</span></a>
+  <div class="nav-links">
+    <a href="/">{{ T.home }}</a>
+    <a href="/menu/">{{ T.menu }}</a>
+    <a href="/contact/">{{ T.contact }}</a>
+    <a href="/cart/">🛒 {{ cart_count|default:0 }}</a>
+    
+  </div>
+</div></nav>
+<section class="hero"><div class="container">
+  <h1>{{ T.about_title }}</h1>
+  <p>{{ T.about_sub }}</p>
+</div></section>
+{% if products %}
+<section class="section"><div class="container">
+  <h2>{{ T.selected }}</h2>
+  <p style="color:var(--m);margin-bottom:16px">{{ T.selected_sub }}</p>
+  <div class="grid">
+    {% for p in products %}
+    <a class="card" href="{% url 'product_detail' p.id %}">
+      <img src="{{ p.get_cover }}" alt="{{ p.name }}" loading="lazy"
+           onerror="this.onerror=null;this.src='https://placehold.co/800x800/16a34a/fff?text={{ p.name|urlencode }}'">
+      <div class="body">
+        <div style="font-size:.75rem;color:var(--g);font-weight:800">{{ p.category.name|default:"" }}</div>
+        <strong>{{ p.name }}</strong>
+        <div class="stars">{% for i in "12345" %}{% if forloop.counter <= p.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+        <div class="price">{{ p.final_price }} {{ T.price }}</div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div></section>
+{% endif %}
+</body>
+</html>

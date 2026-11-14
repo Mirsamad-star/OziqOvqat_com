@@ -1,0 +1,41 @@
+{% extends "emails/base_email.html" %}
+{% block title %}Buyurtma #{{ order.pk }} — Oziq Ovqat{% endblock %}
+{% block content %}
+<h1 style="margin:0 0 8px;font-size:22px;color:#1a1a1a;">Buyurtma qabul qilindi ✅</h1>
+<p style="margin:0 0 20px;font-size:15px;color:#444;">Hurmatli <strong>{{ name }}</strong>, buyurtmangiz muvaffaqiyatli qabul qilindi.</p>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;background:#fff8f3;border-radius:12px;border:1px solid #ffe0cc;">
+  <tr>
+    <td style="padding:16px 20px;">
+      <p style="margin:0 0 6px;font-size:14px;"><strong style="color:#ff6b00;">Buyurtma №:</strong> #{{ order.pk }}</p>
+      <p style="margin:0 0 6px;font-size:14px;"><strong style="color:#ff6b00;">Holat:</strong> {{ status_display }}</p>
+      <p style="margin:0 0 6px;font-size:14px;"><strong style="color:#ff6b00;">Telefon:</strong> {{ order.phone }}</p>
+      <p style="margin:0;font-size:14px;"><strong style="color:#ff6b00;">Manzil:</strong> {{ order.address }}</p>
+    </td>
+  </tr>
+</table>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:16px;">
+  <tr style="background:#fafafa;">
+    <th align="left" style="padding:10px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Mahsulot</th>
+    <th align="center" style="padding:10px 8px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Soni</th>
+    <th align="right" style="padding:10px 12px;font-size:13px;color:#666;border-bottom:1px solid #eee;">Summa</th>
+  </tr>
+  {% for item in items %}
+  <tr>
+    <td style="padding:12px;font-size:14px;border-bottom:1px solid #f0f0f0;">{{ item.product_name }}</td>
+    <td align="center" style="padding:12px 8px;font-size:14px;border-bottom:1px solid #f0f0f0;">{{ item.quantity }}</td>
+    <td align="right" style="padding:12px;font-size:14px;border-bottom:1px solid #f0f0f0;">{{ item.subtotal }} so‘m</td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% if order.discount_percent %}
+<p style="margin:0 0 8px;font-size:14px;color:#16a34a;">Chegirma: {{ order.discount_percent }}%</p>
+{% endif %}
+<p style="margin:0 0 24px;font-size:18px;font-weight:800;color:#ff6b00;">Jami: {{ order.total }} so‘m</p>
+
+<p style="text-align:center;">
+  <a href="{{ site_url }}/order/success/{{ order.pk }}/" style="display:inline-block;padding:14px 28px;background:#ff6b00;color:#fff;text-decoration:none;border-radius:999px;font-weight:700;font-size:15px;">Buyurtmani ko‘rish</a>
+</p>
+{% endblock %}
